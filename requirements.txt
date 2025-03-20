@@ -1,0 +1,9 @@
+redis==5.0.1
+pytz==2024.1
+alpaca_trade_api
+asyncio
+aioredis
+aiohttp
+yfinance
+pandas
+datetime

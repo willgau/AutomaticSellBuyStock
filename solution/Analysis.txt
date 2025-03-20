@@ -1,0 +1,33 @@
+Possible Optimization: 
+	Optimize message broekers or protocol dedicated for trading thus inducing low latency 
+	Persistent connections to reduce handshake
+	Remove all sleep and change them to non-blocking call (await)
+	Profile function to optimize them
+	Persistent API with asynchronus request if possible with the API
+	Be closer to the broker's server, reduce network route
+	High-performance hardware, specialize hardware 
+	Remove every useless call (logs, if/else, etc.)
+
+
+Strategy
+	I calculate a correlation matrix of different stock (here only around 10 different stocks). In a real environment, we could 
+	calculate huge correlation matrix with way more stocks and have multiple correlation between many stocks.
+	This is done before anything is launch (this could always be calculated off market hour on historical data) and calculate on live 
+	data. Here it's only calculated on historical data. It's calculated on big tech and semiconductors companies.
+	
+	On different threads, each stock price calculated in the matrix is refresh to have the latest price therefore when the signal is sent
+	every stocks (included the NVDA stock) is at his latest stock price.
+	
+	The redis signal is async, therefore when the message arrive, the signal to buy/sell is directly sent. Minimal operation are done in the 
+	function that submit the order. The main order is sent directly and should empty has much as possible. When that order is done, we might have
+	some cash left in the account therefore we want to use everything. We then go through all the the stock that has the most correlation to the main stock. And try to sell it if the stock price is in the range of the cash left. We repeat that until all the stock are exhausted or no cash is left.
+	
+	At the end, we print the order(s) and the statistic of the trade like execution time. 
+	
+	
+Future Improvement
+		All logging can be done outside of the that thread in an async way.
+		Segregate better the program; everything is in the main file. 
+		Async connection to the API
+		Break down huge sell/buy quantity into smaller one using Volume-Weighted Average Price or Time-Weighted Average Price to reduce the market impact and slippage.
+		Real-time monitoring to have the ability to intervene 
